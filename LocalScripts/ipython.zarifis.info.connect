@@ -1,0 +1,3 @@
+#! /bin/bash
+ssh -i ~/mykeypair.pem ubuntu@ipython.zarifis.info
+echo 'connecting...'

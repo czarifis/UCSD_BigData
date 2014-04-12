@@ -36,11 +36,31 @@ Here are the steps you need to follow to achieve this
  your current address to all of the ports.
 
 """
+<<<<<<< Updated upstream
 
 from AWSCredentials import *
 
-ami='ami-278a974e'              # Image configured for big data class
-# AMI name: DataScienceEigenVector. These two lines updates 4/8/2014
+ami='ami-112e3d78'              # Image configured for big data class
+# AMI name: DataScience12. These two lines updates 4/3/2014
+=======
+### AWS credentials: ####
+# Change entries here to match your own #
+aws_access_key_id='AKIAJOODLUCII7E3B4PA'
+aws_secret_access_key='pmw6YMNdgNMJ/vN8cOMZtjVAfxxfCIpBRbQqJ42e'
+keyPairFile="~/mykeypair.pem" # name of file keeping local key
+key_name="mykeypair" # name of keypair (not name of file where key is stored)
+security_groups=['launch-wizard-1']
+
+ami='ami-855646ec'
+#ami='ami-e3f7f98a'              # Image configured for big data class
+### End of AWS credentials ####
+
+#aws_access_key_id='AKIAJHFF3QTAKMG4LBBQ'
+#aws_secret_access_key='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'
+#keyPairFile='/Users/yoavfreund/.ssh/YoavsKeypair.pem' # name of local file storing keypair
+#key_name="YoavsKeypair"         # name of keypair on AWS
+#security_groups=['YoavsWork']
+>>>>>>> Stashed changes
 
 # ### Definitions of procedures ###
 import boto.ec2
