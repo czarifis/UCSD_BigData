@@ -13,28 +13,29 @@ import re
 from sys import stderr
 import json
 
-class SqliteJob(MRJob):
+class pcagroubedby(MRJob):
     
     def __init__(self, *args, **kwargs):
-        super(SqliteJob, self).__init__(*args, **kwargs)
+        super(pcagroubedby, self).__init__(*args, **kwargs)
         self.data = {}
         
     
 
     def configure_options(self):
-        super(SqliteJob, self).configure_options()
+        super(pcagroubedby, self).configure_options()
         self.add_file_option('--hashmap')
+        self.add_file_option('--usemeasurement')
 
     def mapper_init(self):
         json_data=open(self.options.hashmap)
-
+        self.meas = self.options.usemeasurement
         self.data = json.load(json_data)
-        
+        #sys.stderr.write('loaded: '+str(self.meas))
         #sys.stderr.write(str(data))
         json_data.close()
         # make dictionary available to mapper
         #sys.stderr.write('MAPPER_INIT!!')
-        sys.stderr.write(str(self.options.hashmap))
+        #sys.stderr.write(str(self.options.hashmap))
         
         #self.sqlite_conn = sqlite3.connect(self.options.database)
     def mapper(self, _, line):
@@ -53,26 +54,27 @@ class SqliteJob(MRJob):
                 out=('header','0~0')
                 #yield out
             else:
-                if elements[1]=='TMAX':
+                if elements[1]==self.meas:
+                    #sys.stderr.write('YOLO')
                     
                     # Uncomment that to get measurements from a specific year.
                     #if elements[2]=='1973':
                         
                         # Use the following instead if you want to avoid null values
                         #out=(str(self.data[elements[0]]),str(filter(None,elements[3:])))#+'~'+str(0))
-                        sys.stderr.write(str(elements[0]))
-                        sys.stderr.write(str(self.data[elements[0]]))
-                        sys.stderr.write(str(elements))
-                        out=(str(self.data[elements[0]]),(elements[3:]))#+'~'+str(0))
-                        sys.stderr.write(str(out))
-                        yield out
-                #elif elements[1]=='TMIN':
-                    
-                    # Uncomment that to get measurements from a specific year.
-                    #if elements[2]=='1973':
                         
-               #         out=(elements[0],str(0)+'~'+str(len(filter(None, elements[3:]))))
-               #         yield out
+                        out=(str(self.data[elements[0]]),(elements[3:]))#+'~'+str(0))
+                        #sys.stderr.write(str(out))
+                        yield out
+#                 elif elements[1]=='TMAX':
+                    
+#                     # Uncomment that to get measurements from a specific year.
+#                     #if elements[2]=='1973':
+                        
+                        
+#                         out=(str(self.data[elements[0]]),'TMAX'+(elements[3:]))#+'~'+str(0))
+#                         sys.stderr.write(str(out))
+#                         yield out
         except Exception, e:
 
             self.increment_counter('MrJob Counters','mapper-error',1)
@@ -95,7 +97,7 @@ class SqliteJob(MRJob):
     def reducer(self, group, vals):
 
         self.increment_counter('MrJob Counters','reducer',1)
-        sys.stderr.write('group range is: '+str(group)+'\n')
+        #sys.stderr.write('group range is: '+str(group)+'\n')
         valArr = []
         
         for val in vals:
@@ -135,11 +137,9 @@ class SqliteJob(MRJob):
         M=M.dropna(axis=1)
         
         # check again after dropping the nan values
-        sys.stderr.write('\n M shape after droping NaNs is: '+str(np.shape(M)))
+        #sys.stderr.write('\n M shape after droping NaNs is: '+str(np.shape(M)))
         
         (columns,rows)=np.shape(M)
-        
-        # check if there are any values in this group
         
         
         # Let's compute the covariance, (We could use np.cov instead...)
@@ -159,19 +159,19 @@ class SqliteJob(MRJob):
             valid_outer=np.multiply(1-np.isnan(N),N>0)
             cov=np.divide(C,N)
 #             cov2 = np.cov(M)
-            sys.stderr.write('\ncov is: \n'+str(cov)+'\ncov2 is: \n'+str(cov2))
+#             sys.stderr.write('\ncov is: \n'+str(cov)+'\ncov2 is: \n'+str(cov2))
 #             for elem in cov:
 #                 sys.stderr.write('\ncov is: \n'+str(elem))
-            sys.stderr.write('\nnp.sum(cov) : '+str(np.sum(cov)))
+#            sys.stderr.write('\nnp.sum(cov) : '+str(np.sum(cov)))
             summation = np.sum(cov)
             if summation!=0:
                 U,D,V=np.linalg.svd(cov)
-                sys.stderr.write('\nyielding D')
+                #sys.stderr.write('\nyielding D')
                 yield (group+str(rows),str(D))
 
                 
-        else:
-            sys.stderr.write('nothing to do here')
+        #else:
+        #    sys.stderr.write('nothing to do here')
 
 if __name__ == '__main__':
-    SqliteJob.run()
+    pcagroubedby.run()
