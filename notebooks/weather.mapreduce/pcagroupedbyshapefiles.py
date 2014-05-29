@@ -164,7 +164,7 @@ class pcagroupedbyshapefiles(MRJob):
 #                 sys.stderr.write('\ncov is: \n'+str(elem))
 #            sys.stderr.write('\nnp.sum(cov) : '+str(np.sum(cov)))
             summation = np.sum(cov)
-            sys.stderr.write(str(cov))
+            #sys.stderr.write(str(cov))
             if summation!=0:
                 U,D,V=np.linalg.svd(cov)
                 #sys.stderr.write('\nyielding D')
