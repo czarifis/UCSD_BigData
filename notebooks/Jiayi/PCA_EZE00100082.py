@@ -32,7 +32,7 @@ class PCA_EZE00100082(MRJob):
                         AllNum=False
             #filter out the unwanted measurements and the header line
             if (measure_type == 'TMAX')\
-                and "EZE001" in station and len(measurements)==366 and nomeas>=366 and AllNum: 
+                and len(measurements)==366 and nomeas>=366 and AllNum: 
                 self.increment_counter('MrJob Counters','usefull lines',1)
                 yield (station, measurements)
                 
@@ -87,7 +87,7 @@ class PCA_EZE00100082(MRJob):
 #Eigenvalues:    
             Eig=np.matrix(U[:,:k])
             for t in range(0,number_Year):
-                if 1995 <= year[t] and year[t] <= 2013:                    
+                if 1890 <= year[t] and year[t] <= 1900:                    
                     subtarr=np.array(data[t])-np.array(meanlis)  
                     nbs = np.inner(subtarr,subtarr)
                     for i in range(0,k):
@@ -97,8 +97,6 @@ class PCA_EZE00100082(MRJob):
            # matr+=np.outer(subtarr,subtarr)
            # matrix=np.matrix(measurements.ix[:,1:365])#-Mean
            # Prod=matrix*Eig;
-                        
-            yield(station,n)
         except Exception, e:
             #yield (('error','reducer', str(e)), 1)
             stderr.write('Error in reducer')
