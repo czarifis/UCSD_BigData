@@ -89,8 +89,7 @@ class MRWeather(MRJob):
         The reducer outputs tuples of the form (station_name, "number_of_TMAX_measurements~number_of_TMIN_measurements")
     ''' 
     def reducer(self, station, vals):
-        
-        try:
+        #try:
             self.increment_counter('MrJob Counters','reducer',1)
             maxs=[]
             mins=[]
@@ -103,15 +102,12 @@ class MRWeather(MRJob):
             summax = sum(maxs)
             summin = sum(mins)
             #sys.stderr.write('number of max measurements: '+str(summax)+' number of min measurements: '+str(summin)+'\n')
-            
-            # yielding distinct values for TMAX and TMIN as mentioned before
-            
             out = (station,(str(summax)+'~'+str(summin)))
-            
+            #sys.stderr.write(str(out)+'\n')
             yield out
-        except Exception, e:
+        #except Exception, e:
             #stderr.write('Error in line:\n'+str(station)+', '+str(maxmin))
-            sys.stderr.write(e)
+            #stderr.write(e)
             
 
 
